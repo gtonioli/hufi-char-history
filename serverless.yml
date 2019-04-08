@@ -1,0 +1,90 @@
+service: hufi-char-history
+
+plugins:
+  - serverless-offline
+  - serverless-webpack
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+provider:
+  name: aws
+  stage: dev
+  runtime: nodejs8.10
+  memorySize: 128
+  timeout: 900
+  environment:
+    AWS_ACCOUNT_ID: 175586613496
+    STAGE: ${opt:stage, self:provider.stage}
+    DYNAMODB_CHAR_TABLE: Char-${opt:stage, self:provider.stage}
+    DYNAMODB_CHAR_HISTORY_TABLE: CharHistory-${opt:stage, self:provider.stage}
+    SQS_CHAR_RAIDER_IO_QUEUE: CharRaiderIOQuery-${opt:stage, self:provider.stage}
+    REGION: us
+    REALM: azralon
+    SEASON: season-bfa-2
+    TIER: 23
+    GUILD: RED Canids
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.DYNAMODB_CHAR_TABLE}"
+        - "arn:aws:dynamodb:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.DYNAMODB_CHAR_HISTORY_TABLE}"
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+      Resource:
+        - "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
+
+resources:
+  Resources:
+    CharDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: name
+            AttributeType: S
+          - AttributeName: realm
+            AttributeType: S
+        KeySchema:
+          - AttributeName: realm
+            KeyType: HASH
+          - AttributeName: name
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.DYNAMODB_CHAR_TABLE}
+    CharHistoryDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: charId
+            AttributeType: S
+          - AttributeName: timestamp
+            AttributeType: N
+        KeySchema:
+          - AttributeName: charId
+            KeyType: HASH
+          - AttributeName: timestamp
+            KeyType: RANGE
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.DYNAMODB_CHAR_HISTORY_TABLE}
+    CharRaiderIOQueryQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: ${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}
+
+functions:
+  charListJob:
+    handler: handlers/charListJob.handle
+    events:
+      - schedule: rate(4 hours)
