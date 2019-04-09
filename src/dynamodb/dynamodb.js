@@ -2,10 +2,11 @@ const AWS = require('aws-sdk');
 const ddb = new AWS.DynamoDB.DocumentClient();
 
 class DynamoDB {
-   static getItem(tableName, key) {
+   static getItem(tableName, key, consistentRead) {
       return ddb.get({
          TableName: tableName,
-         Key: key
+         Key: key,
+         ConsistentRead: !!consistentRead
       }).promise();
    }
 
@@ -13,6 +14,14 @@ class DynamoDB {
       return ddb.put({
          TableName: tableName,
          Item: item
+      }).promise();
+   }
+
+   static update(tableName, key, params) {
+      return ddb.update({
+         TableName: tableName,
+         Key: key,
+         ...params
       }).promise();
    }
 }

@@ -1,5 +1,3 @@
-# Char List Job
-
 ## Serverless
 
 ### Local

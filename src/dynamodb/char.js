@@ -11,6 +11,17 @@ class Char {
       const item = Object.assign({realm, name}, params || {});
       return await DynamoDB.putItem(tableName, item);
    }
+
+   static async updateScore(realm, name, score, updateTime) {
+      return await DynamoDB.update(tableName, {realm, name}, {
+         UpdateExpression: "SET score = :score, updateTime = :updateTime",
+         ExpressionAttributeValues: {
+            ":score": score,
+            ":updateTime": updateTime
+         },
+         ConditionExpression: "attribute_not_exists(score)  OR :score > score"
+      });
+   }
 }
 
 export default Char;

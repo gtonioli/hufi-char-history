@@ -3,6 +3,7 @@ service: hufi-char-history
 plugins:
   - serverless-offline
   - serverless-webpack
+  - serverless-iam-roles-per-function
 
 custom:
   webpack:
@@ -99,8 +100,9 @@ functions:
     timeout: 60
     events:
       - sqs:
-        arn: "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
-        batchSize: 1
+          arn: "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
+          batchSize: 1
+          enabled: true
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -113,3 +115,10 @@ functions:
         Resource:
           - "arn:aws:dynamodb:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.DYNAMODB_CHAR_TABLE}"
           - "arn:aws:dynamodb:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.DYNAMODB_CHAR_HISTORY_TABLE}"
+      - Effect: Allow
+        Action:
+          - sqs:ReceiveMessage
+          - sqs:DeleteMessage
+          - sqs:GetQueueAttributes
+        Resource:
+          - "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
