@@ -133,4 +133,4 @@ functions:
           - s3:PutObject
           - s3:PutObjectAcl
         Resource:
-          - "arn:aws:s3:::${self:provider.environment.S3_CHAR_HISTORY_BUCKET}"
+          - "arn:aws:s3:::${self:provider.environment.S3_CHAR_HISTORY_BUCKET}/*"
