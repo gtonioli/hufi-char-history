@@ -72,7 +72,7 @@ resources:
       Type: "AWS::SQS::Queue"
       Properties:
         QueueName: ${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}
-        VisibilityTimeout: 60
+        VisibilityTimeout: 300
     CharHistoryBucket:
       Type: "AWS::S3::Bucket"
       Properties:
@@ -107,7 +107,7 @@ functions:
     events:
       - sqs:
           arn: "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
-          batchSize: 1
+          batchSize: 10
           enabled: true
     iamRoleStatements:
       - Effect: Allow
