@@ -73,7 +73,6 @@ resources:
       Properties:
         QueueName: ${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}
         VisibilityTimeout: 60
-
     CharHistoryBucket:
       Type: "AWS::S3::Bucket"
       Properties:
@@ -103,6 +102,7 @@ functions:
           - "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
   charScoreUpdate:
     handler: handlers/charScoreUpdate.handle
+    reservedConcurrency: 25
     timeout: 60
     events:
       - sqs:
@@ -133,4 +133,5 @@ functions:
           - s3:PutObject
           - s3:PutObjectAcl
         Resource:
+          - "arn:aws:s3:::${self:provider.environment.S3_CHAR_HISTORY_BUCKET}"
           - "arn:aws:s3:::${self:provider.environment.S3_CHAR_HISTORY_BUCKET}/*"

@@ -7,9 +7,7 @@ import slugify from "slugify";
 import Chart from "../src/chart";
 
 export const handle = async (event, context, callback) => {
-   const message = {
-      "realm": "US_Azralon", "name": "Hufibek"
-   };// JSON.parse(event.Records[0].body);
+   const message = JSON.parse(event.Records[0].body);
 
    try {
       const dbChar = await Char.getItem(message.realm, message.name, true);

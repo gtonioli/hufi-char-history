@@ -13,7 +13,7 @@ class S3 {
          ContentType: contentType
       };
 
-      await s3.putObject(object).promise();
+      return await s3.putObject(object).promise();
    }
 }
 
