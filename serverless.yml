@@ -102,8 +102,8 @@ functions:
           - "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
   charScoreUpdate:
     handler: handlers/charScoreUpdate.handle
-    reservedConcurrency: 25
-    timeout: 60
+    reservedConcurrency: 10
+    timeout: 300
     events:
       - sqs:
           arn: "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
