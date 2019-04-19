@@ -38,7 +38,10 @@ export const handle = async (event, context, callback) => {
             chartY.push(item.score);
          });
 
-         const s3Key = "charts/evolution/" + slugify(key) + ".png";
+         const slug = slugify(key, {
+            lower: true
+         });
+         const s3Key = "charts/evolution/" + slug + ".png";
          const chart = await Chart.getBase64({
             "x": chartX,
             "y": chartY,
