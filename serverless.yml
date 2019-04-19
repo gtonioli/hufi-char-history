@@ -27,6 +27,7 @@ provider:
     DYNAMODB_CHAR_TABLE: Char-${opt:stage, self:provider.stage}
     DYNAMODB_CHAR_HISTORY_TABLE: CharHistory-${opt:stage, self:provider.stage}
     SQS_CHAR_RAIDER_IO_QUEUE: CharRaiderIOQuery-${opt:stage, self:provider.stage}
+    S3_CHAR_HISTORY_BUCKET: hufi-char-history-${opt:stage, self:provider.stage}
     REGION: us
     REALM: azralon
     SEASON: season-bfa-2
@@ -36,7 +37,7 @@ provider:
 resources:
   Resources:
     CharDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
@@ -52,7 +53,7 @@ resources:
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.DYNAMODB_CHAR_TABLE}
     CharHistoryDynamoDbTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
@@ -72,6 +73,11 @@ resources:
       Properties:
         QueueName: ${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}
         VisibilityTimeout: 60
+
+    CharHistoryBucket:
+      Type: "AWS::S3::Bucket"
+      Properties:
+        BucketName: ${self:provider.environment.S3_CHAR_HISTORY_BUCKET}
 
 functions:
   charListJob:
@@ -122,3 +128,9 @@ functions:
           - sqs:GetQueueAttributes
         Resource:
           - "arn:aws:sqs:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:${self:provider.environment.SQS_CHAR_RAIDER_IO_QUEUE}"
+      - Effect: Allow
+        Action:
+          - s3:PutObject
+          - s3:PutObjectAcl
+        Resource:
+          - "arn:aws:s3:::${self:provider.environment.S3_CHAR_HISTORY_BUCKET}"

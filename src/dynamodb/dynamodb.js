@@ -24,6 +24,13 @@ class DynamoDB {
          ...params
       }).promise();
    }
+
+   static query(tableName, params) {
+      return ddb.query({
+         TableName: tableName,
+         ...params
+      }).promise();
+   }
 }
 
 export default DynamoDB;

@@ -1,5 +1,5 @@
 import axios from 'axios/index';
-import {guild, season, tier, realm, region} from './config';
+import {guild, realm, region, season, tier} from './config';
 
 class RaiderIO {
    static async listGuildMembers() {

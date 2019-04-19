@@ -18,8 +18,7 @@ class Char {
          ExpressionAttributeValues: {
             ":score": score,
             ":updateTime": updateTime
-         },
-         ConditionExpression: "attribute_not_exists(score)  OR :score > score"
+         }
       });
    }
 }
