@@ -12,7 +12,13 @@ custom:
   charListJob:
     events:
       prod:
-        schedule: rate(4 hours)
+        schedule: rate(24 hours)
+      dev:
+        schedule:
+  charRequireScoreUpdateJob:
+    events:
+      prod:
+        schedule: rate(3 hours)
       dev:
         schedule:
 
@@ -84,6 +90,22 @@ functions:
     timeout: 900
     events:
       - schedule: ${self:custom.charListJob.events.${opt:stage, self:provider.stage}.schedule}
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+          - dynamodb:Scan
+          - dynamodb:GetItem
+          - dynamodb:PutItem
+          - dynamodb:UpdateItem
+          - dynamodb:DeleteItem
+        Resource:
+          - "arn:aws:dynamodb:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.DYNAMODB_CHAR_TABLE}"
+  charRequireScoreUpdateJob:
+    handler: handlers/charRequireScoreUpdateJob.handle
+    timeout: 900
+    events:
+      - schedule: ${self:custom.charRequireScoreUpdateJob.events.${opt:stage, self:provider.stage}.schedule}
     iamRoleStatements:
       - Effect: Allow
         Action:

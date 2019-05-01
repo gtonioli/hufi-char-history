@@ -1,9 +1,6 @@
 import RaiderIO from "../src/raiderio";
 import Char from "../src/dynamodb/char";
 import _ from "lodash";
-import SQS from "../src/sqs/sqs";
-
-const queue = process.env.SQS_CHAR_RAIDER_IO_QUEUE;
 
 export const handle = async (event, context, callback) => {
    try {
@@ -21,8 +18,6 @@ export const handle = async (event, context, callback) => {
                createTime: now.getTime()
             });
          }
-
-         await SQS.sendMessage(queue, {realm, name});
       }
    } catch (e) {
       if (e instanceof Error) {

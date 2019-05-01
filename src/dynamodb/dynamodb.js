@@ -31,6 +31,13 @@ class DynamoDB {
          ...params
       }).promise();
    }
+
+   static scan(tableName, params) {
+      return ddb.scan({
+         TableName: tableName,
+         ...params
+      }).promise();
+   }
 }
 
 export default DynamoDB;

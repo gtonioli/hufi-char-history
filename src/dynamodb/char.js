@@ -21,6 +21,10 @@ class Char {
          }
       });
    }
+
+   static async scan(params) {
+      return await DynamoDB.scan(tableName, params);
+   }
 }
 
 export default Char;
