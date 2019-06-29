@@ -28,10 +28,10 @@ export const handle = async (event, context, callback) => {
 
             const history = await CharHistory.queryByCharId(key);
             let items = history.Items.sort((x, y) => {
-               return y.timestamp - x.timestamp
+               return x.timestamp - y.timestamp
             });
 
-            const lastDays = 45;
+            const lastDays = 90;
             const updatesPerDay = 8;
             const maxPoints = lastDays * updatesPerDay;
 
