@@ -43,11 +43,20 @@ export const handle = async (event, context, callback) => {
                lower: true
             });
             const s3Key = "charts/evolution/" + slug + ".png";
-            const chart = await Chart.getBase64({
+
+            const data = {
                "x": chartX,
                "y": chartY,
                "type": "lines+markers"
-            });
+            };
+
+            const layout = {
+               "yaxis": {
+                  "rangemode": "tozero"
+               }
+            };
+
+            const chart = await Chart.getBase64(data, layout);
             await S3.putImageObject(s3Key, chart, 'image/png');
          }
       } catch (e) {
