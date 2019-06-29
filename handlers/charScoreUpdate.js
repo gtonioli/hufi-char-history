@@ -27,9 +27,16 @@ export const handle = async (event, context, callback) => {
             });
 
             const history = await CharHistory.queryByCharId(key);
-            const items = history.Items.sort((x, y) => {
+            let items = history.Items.sort((x, y) => {
                return y.timestamp - x.timestamp
             });
+
+            const lastDays = 45;
+            const updatesPerDay = 8;
+            const maxPoints = lastDays * updatesPerDay;
+
+            items = items.slice(Math.max(items.length - maxPoints, 0));
+
             const chartX = [];
             const chartY = [];
 
