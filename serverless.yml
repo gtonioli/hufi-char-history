@@ -15,7 +15,7 @@ custom:
         schedule: rate(24 hours)
       dev:
         schedule:
-  charRequireScoreUpdateJob:
+  charRequireUpdateJob:
     events:
       prod:
         schedule: rate(3 hours)
@@ -36,7 +36,7 @@ provider:
     S3_CHAR_HISTORY_BUCKET: hufi-char-history-${opt:stage, self:provider.stage}
     REGION: us
     REALM: azralon
-    SEASON: season-bfa-2
+    SEASON: season-bfa-2-post
     TIER: 23
     GUILD: RED Canids
 
@@ -101,11 +101,11 @@ functions:
           - dynamodb:DeleteItem
         Resource:
           - "arn:aws:dynamodb:${opt:region, self:provider.region}:${self:provider.environment.AWS_ACCOUNT_ID}:table/${self:provider.environment.DYNAMODB_CHAR_TABLE}"
-  charRequireScoreUpdateJob:
-    handler: handlers/charRequireScoreUpdateJob.handle
+  charRequireUpdateJob:
+    handler: handlers/charRequireUpdateJob.handle
     timeout: 900
     events:
-      - schedule: ${self:custom.charRequireScoreUpdateJob.events.${opt:stage, self:provider.stage}.schedule}
+      - schedule: ${self:custom.charRequireUpdateJob.events.${opt:stage, self:provider.stage}.schedule}
     iamRoleStatements:
       - Effect: Allow
         Action:
