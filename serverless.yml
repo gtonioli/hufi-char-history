@@ -8,7 +8,9 @@ plugins:
 custom:
   webpack:
     webpackConfig: ./webpack.config.js
-    includeModules: true
+    includeModules:
+      forceExclude:
+        - aws-sdk
   charListJob:
     events:
       prod:
@@ -25,7 +27,7 @@ custom:
 provider:
   name: aws
   stage: dev
-  runtime: nodejs8.10
+  runtime: nodejs10.x
   memorySize: 128
   environment:
     AWS_ACCOUNT_ID: 175586613496

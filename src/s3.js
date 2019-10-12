@@ -9,7 +9,7 @@ class S3 {
          Bucket: bucketName,
          Key: key,
          ACL: "public-read",
-         Body: new Buffer(body, "base64"),
+         Body: Buffer.from(body, "base64"),
          ContentType: contentType
       };
 

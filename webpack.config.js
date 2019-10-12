@@ -4,8 +4,13 @@ const slsw = require('serverless-webpack');
 module.exports = {
    entry: slsw.lib.entries,
    mode: slsw.lib.webpack.isLocal ? 'development' : 'production',
+   externals: [
+      {
+         'aws-sdk': 'commonjs aws-sdk'
+      }
+   ],
    optimization: {
-      minimize: false
+      minimize: true
    },
    module: {
       rules: [

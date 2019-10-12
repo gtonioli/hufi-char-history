@@ -1,6 +1,6 @@
 import RaiderIO from "../src/raiderio";
 import Char from "../src/dynamodb/char";
-import _ from "lodash";
+import isEmpty from "lodash/isEmpty";
 
 export const handle = async (event, context, callback) => {
    try {
@@ -12,7 +12,7 @@ export const handle = async (event, context, callback) => {
          const name = char.name;
          const dbChar = await Char.getItem(realm, name);
 
-         if (_.isEmpty(dbChar)) {
+         if (isEmpty(dbChar)) {
             const now = new Date();
             await Char.putItem(realm, name, {
                createTime: now.getTime()
