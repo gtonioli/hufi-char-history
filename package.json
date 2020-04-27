@@ -13,7 +13,7 @@
       "webpack": "4.43.0"
    },
    "dependencies": {
-      "aws-sdk": "2.663.0",
+      "aws-sdk": "2.664.0",
       "axios": "0.19.2",
       "lodash": "4.17.15",
       "slugify": "1.4.0"
