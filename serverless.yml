@@ -38,8 +38,8 @@ provider:
     S3_CHAR_HISTORY_BUCKET: hufi-char-history-${opt:stage, self:provider.stage}
     REGION: us
     REALM: azralon
-    SEASON: season-bfa-4-post
-    TIER: 25
+    SEASON: season-sl-1
+    TIER: 26
     GUILD: RED Canids
 
 resources:
