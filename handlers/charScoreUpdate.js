@@ -31,7 +31,7 @@ export const handle = async (event, context, callback) => {
                return x.timestamp - y.timestamp
             });
 
-            const lastDays = 90;
+            const lastDays = 45;
             const updatesPerDay = 8;
             const maxPoints = lastDays * updatesPerDay;
 
